@@ -85,6 +85,9 @@ RUN echo "Installing Bun ${BUN_VERSION}..." \
 
 ENV PATH="/home/vscode/.bun/bin:${PATH}"
 
+# Create node symlink for bun compatibility (beads uses #!/usr/bin/env node)
+RUN ln -s /home/vscode/.bun/bin/bun /home/vscode/.bun/bin/node
+
 # Install Claude CLI
 RUN echo "Installing Claude CLI..." \
     && curl -fsSL https://claude.ai/install.sh | bash \
