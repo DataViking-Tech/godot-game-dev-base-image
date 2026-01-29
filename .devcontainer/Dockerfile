@@ -85,7 +85,7 @@ RUN echo "Installing Bun ${BUN_VERSION}..." \
 
 ENV PATH="/home/vscode/.bun/bin:${PATH}"
 
-# Create node symlink for bun compatibility (beads uses #!/usr/bin/env node)
+# Create node symlink for bun compatibility
 RUN ln -s /home/vscode/.bun/bin/bun /home/vscode/.bun/bin/node
 
 # Install Claude CLI
@@ -95,9 +95,18 @@ RUN echo "Installing Claude CLI..." \
 
 ENV PATH="/home/vscode/.local/bin:${PATH}"
 
-# Install beads (using bun)
+# Install Node.js and npm (needed for beads postinstall scripts)
+USER root
+RUN echo "Installing Node.js for beads..." \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+USER $USERNAME
+
+# Install beads (using npm for reliable postinstall script execution)
 RUN echo "Installing beads..." \
-    && bun install -g @beads/bd
+    && npm install -g @beads/bd
 
 # Write version file for validation
 USER root
