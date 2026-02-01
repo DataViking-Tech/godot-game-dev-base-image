@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_call:
+    inputs:
+      tag:
+        description: 'The version tag to build (e.g. v1.2.3)'
+        required: true
+        type: string
   workflow_dispatch:
 
 env:
@@ -20,6 +26,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
 
       - name: Extract and validate version from tag
         id: version
@@ -29,7 +37,11 @@ jobs:
             echo "MAJOR=" >> $GITHUB_OUTPUT
             echo "MINOR=" >> $GITHUB_OUTPUT
           else
-            TAG=${GITHUB_REF#refs/tags/}
+            if [ -n "${{ inputs.tag }}" ]; then
+              TAG="${{ inputs.tag }}"
+            else
+              TAG=${GITHUB_REF#refs/tags/}
+            fi
             if ! echo "$TAG" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
               echo "Error: Tag must match semantic version format (vX.Y.Z)"
               exit 1
