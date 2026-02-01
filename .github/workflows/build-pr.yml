@@ -1,0 +1,43 @@
+name: PR Build Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: pr-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  IMAGE_NAME: godot-game-dev-pr
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          build-args: |
+            GODOT_VERSION=4.5.1
+          tags: ${{ env.IMAGE_NAME }}:${{ github.event.pull_request.number }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run validate-tools.sh
+        run: |
+          docker run --rm ${{ env.IMAGE_NAME }}:${{ github.event.pull_request.number }} \
+            /usr/local/bin/validate-tools.sh
