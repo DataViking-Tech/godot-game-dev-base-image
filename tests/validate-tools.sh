@@ -63,6 +63,7 @@ test_file() {
 echo "📦 Game Development Tools:"
 test_command "Godot" "godot --version" "4.5"
 test_command "ffmpeg" "ffmpeg -version" "ffmpeg version"
+test_command "xvfb-run" "xvfb-run --help" "xvfb-run"
 
 echo ""
 echo "🛠️ Base Image Tools (from ai-dev-base):"
@@ -84,11 +85,13 @@ echo ""
 echo "📦 Python Packages:"
 test_command "pillow" "python3 -c 'import PIL; print(PIL.__version__)'" ""
 test_command "numpy" "python3 -c 'import numpy; print(numpy.__version__)'" ""
+test_command "bpy" "python3 -c 'import bpy; print(bpy.app.version_string)'" ""
 
 echo ""
 echo "🔍 Environment:"
 test_command "PATH includes local bin" "echo \$PATH" "local/bin"
 test_command "Shell is bash" "echo \$SHELL" "bash"
+test_command "PYTHONPATH includes render-bridges" "echo \$PYTHONPATH" "/opt/render-bridges"
 
 echo ""
 echo "📊 Results:"
