@@ -1,7 +1,7 @@
 # Godot Game Development Image
 # Extends ai-dev-base with game-specific tools
 
-FROM ghcr.io/dataviking-tech/ai-dev-base:v2@sha256:3603e289650b626ee0c1dd1a497bdb505a5ad3a849ec0e892f0c62473be61555
+FROM ghcr.io/dataviking-tech/ai-dev-base:v2@sha256:728718192d398bffd93597e6618f474b882cb0b7bc09830f4389382b21df5527
 
 # Build arguments for component versions
 ARG GODOT_VERSION=4.5.1
