@@ -5,6 +5,7 @@ FROM ghcr.io/dataviking-tech/ai-dev-base:v2
 
 # Build arguments for component versions
 ARG GODOT_VERSION=4.5.1
+ARG RENDER_BRIDGES_VERSION=main
 
 # Metadata
 LABEL org.opencontainers.image.source=https://github.com/DataViking-Tech/godot-game-dev-base-image
@@ -41,7 +42,13 @@ RUN echo "Installing Godot ${GODOT_VERSION}..." \
     && godot --version
 
 # Install game-specific Python packages via uv
-RUN uv pip install --system pillow numpy
+RUN uv pip install --system pillow numpy pyyaml watchdog
+
+# Install render-bridges (GPU rendering bridge for Linux→Windows host)
+RUN git clone --depth 1 --branch "${RENDER_BRIDGES_VERSION}" \
+        https://github.com/DataViking-Tech/render-bridges.git /opt/render-bridges \
+    && mkdir -p /workspace/temp/render-queue /workspace/temp/render-output \
+    && chmod 777 /workspace/temp/render-queue /workspace/temp/render-output
 
 # Create symlink for bun/node compatibility (if not in base)
 RUN if [ ! -L /root/.bun/bin/node ]; then \
@@ -57,3 +64,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Default shell
 CMD ["/bin/bash"]
+
+# Switch user back before exiting
+USER vscode
