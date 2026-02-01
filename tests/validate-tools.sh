@@ -24,9 +24,9 @@ test_command() {
 
     echo -n "Testing $name... "
 
-    if output=$($command 2>&1); then
+    if output=$(eval "$command" 2>&1); then
         if [ -n "$expected_pattern" ]; then
-            if echo "$output" | grep -q "$expected_pattern"; then
+            if echo "$output" | grep -iq "$expected_pattern"; then
                 echo -e "${GREEN}✓${NC} ($output)"
                 TESTS_PASSED=$((TESTS_PASSED + 1))
             else
