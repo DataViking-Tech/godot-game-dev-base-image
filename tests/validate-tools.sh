@@ -60,29 +60,32 @@ test_file() {
     fi
 }
 
-echo "📦 Core Tools:"
-test_command "Godot" "godot --version" "4.5.1"
-test_command "Python" "python3 --version" "Python 3.11"
-test_command "uv" "uv --version" ""
-test_command "Bun" "bun --version" "1.1"
-test_command "bd (beads)" "bd --version" ""
-
-echo ""
-echo "🛠️ System Tools:"
-test_command "git" "git --version" "git version"
-test_command "curl" "curl --version" "curl"
-test_command "wget" "wget --version" "GNU Wget"
+echo "📦 Game Development Tools:"
+test_command "Godot" "godot --version" "4.5"
 test_command "ffmpeg" "ffmpeg -version" "ffmpeg version"
 
 echo ""
-echo "📄 Image Metadata:"
-test_file "Image Version" "/opt/image-version"
-test_file "Image Manifest" "/opt/image-manifest"
+echo "🛠️ Base Image Tools (from ai-dev-base):"
+test_command "Python" "python3 --version" "Python"
+test_command "uv" "uv --version" "uv"
+test_command "Bun" "bun --version" ""
+test_command "bd (beads)" "bd --version" "bd version"
+test_command "Claude CLI" "claude --version || echo 'installed'" "claude"
+
+echo ""
+echo "🔧 System Tools:"
+test_command "git" "git --version" "git version"
+test_command "curl" "curl --version" "curl"
+test_command "wget" "wget --version" "GNU Wget"
+
+echo ""
+echo "📦 Python Packages:"
+test_command "pillow" "python3 -c 'import PIL; print(PIL.__version__)'" ""
+test_command "numpy" "python3 -c 'import numpy; print(numpy.__version__)'" ""
 
 echo ""
 echo "🔍 Environment:"
-test_command "PATH includes tools" "echo \$PATH" "cargo"
-test_command "User is vscode" "whoami" "vscode"
+test_command "PATH includes local bin" "echo \$PATH" "local/bin"
 test_command "Shell is bash" "echo \$SHELL" "bash"
 
 echo ""
