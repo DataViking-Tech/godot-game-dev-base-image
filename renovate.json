@@ -5,7 +5,6 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/dataviking-tech/ai-dev-base"],
-      "pinDigests": true,
       "schedule": ["before 9am on Monday"]
     }
   ]
