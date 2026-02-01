@@ -72,7 +72,7 @@ jobs:
         if: steps.version.outputs.VERSION != 'manual'
         run: |
           docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }} \
-            bash -c "godot --version && python3 --version && bun --version && bd --version && claude --version"
+            /usr/local/bin/validate-tools.sh
 
       - name: Image summary
         if: steps.version.outputs.VERSION != 'manual'

@@ -55,7 +55,7 @@ jobs:
       - name: Test edge image
         run: |
           docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:edge \
-            bash -c "godot --version && python3 --version && bun --version && bd --version && claude --version"
+            /usr/local/bin/validate-tools.sh
 
       - name: Image summary
         run: |
