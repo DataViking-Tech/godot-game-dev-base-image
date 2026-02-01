@@ -27,6 +27,8 @@ RUN apt-get update && apt-get install -y \
     libxxf86vm1 libsm6 \
     # Multimedia tools
     ffmpeg \
+    # Headless rendering
+    xvfb \
     # Utilities
     unzip \
     && rm -rf /var/lib/apt/lists/*
@@ -42,13 +44,16 @@ RUN echo "Installing Godot ${GODOT_VERSION}..." \
     && godot --version
 
 # Install game-specific Python packages via uv
-RUN uv pip install --system pillow numpy pyyaml watchdog
+RUN uv pip install --system pillow numpy pyyaml watchdog bpy
 
 # Install render-bridges (GPU rendering bridge for Linux→Windows host)
 RUN git clone --depth 1 --branch "${RENDER_BRIDGES_VERSION}" \
         https://github.com/DataViking-Tech/render-bridges.git /opt/render-bridges \
     && mkdir -p /workspace/temp/render-queue /workspace/temp/render-output \
     && chmod 777 /workspace/temp/render-queue /workspace/temp/render-output
+
+# Make render-bridges importable as a Python module
+ENV PYTHONPATH="/opt/render-bridges:${PYTHONPATH}"
 
 # Create symlink for bun/node compatibility (if not in base)
 RUN if [ ! -L /usr/local/bin/node ]; then \
