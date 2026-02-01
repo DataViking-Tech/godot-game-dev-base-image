@@ -60,6 +60,10 @@ RUN if [ ! -L /usr/local/bin/node ]; then \
         ln -s /usr/local/bin/bun /usr/local/bin/node 2>/dev/null || true; \
     fi
 
+# Append godot-specific utility docs to the base image documentation
+COPY docs/UTILITIES.md /tmp/godot-utilities.md
+RUN cat /tmp/godot-utilities.md >> /usr/local/share/image-docs/UTILITIES.md && rm /tmp/godot-utilities.md
+
 # Copy and run validation script to catch tool access issues at build time
 COPY tests/validate-tools.sh /usr/local/bin/validate-tools.sh
 RUN chmod +x /usr/local/bin/validate-tools.sh
