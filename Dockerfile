@@ -51,9 +51,18 @@ RUN git clone --depth 1 --branch "${RENDER_BRIDGES_VERSION}" \
     && chmod 777 /workspace/temp/render-queue /workspace/temp/render-output
 
 # Create symlink for bun/node compatibility (if not in base)
-RUN if [ ! -L /root/.bun/bin/node ]; then \
-        ln -s /root/.bun/bin/bun /root/.bun/bin/node 2>/dev/null || true; \
+RUN if [ ! -L /usr/local/bin/node ]; then \
+        ln -s /usr/local/bin/bun /usr/local/bin/node 2>/dev/null || true; \
     fi
+
+# Copy and run validation script to catch tool access issues at build time
+COPY tests/validate-tools.sh /usr/local/bin/validate-tools.sh
+RUN chmod +x /usr/local/bin/validate-tools.sh
+
+# Validate tools as vscode user (catches permission issues before runtime)
+USER vscode
+RUN /usr/local/bin/validate-tools.sh
+USER root
 
 # Set working directory
 WORKDIR /workspace

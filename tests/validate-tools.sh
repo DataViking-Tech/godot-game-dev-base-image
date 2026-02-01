@@ -71,6 +71,8 @@ test_command "uv" "uv --version" "uv"
 test_command "Bun" "bun --version" ""
 test_command "bd (beads)" "bd --version" "bd version"
 test_command "Claude CLI" "claude --version || echo 'installed'" "claude"
+test_command "GitHub CLI (gh)" "gh --version" "gh version"
+test_command "OpenAI Codex CLI" "codex --version || which codex" ""
 
 echo ""
 echo "🔧 System Tools:"
