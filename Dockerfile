@@ -73,6 +73,26 @@ USER vscode
 RUN /usr/local/bin/validate-tools.sh
 USER root
 
+# Bake devcontainer metadata into image (cascading UTILITIES.md + VS Code extensions)
+# NOTE: Docker LABEL replaces the parent's value for the same key, so we must
+# re-declare base-image extensions here alongside the postCreateCommand.
+LABEL devcontainer.metadata='[{ \
+  "customizations": { \
+    "vscode": { \
+      "extensions": [ \
+        "ms-azuretools.vscode-docker", \
+        "ms-python.python", \
+        "charliermarsh.ruff", \
+        "RooVeterinaryInc.roo-cline", \
+        "sourcegraph.amp", \
+        "Anthropic.claude-code", \
+        "openai.chatgpt" \
+      ] \
+    } \
+  }, \
+  "postCreateCommand": "cp /usr/local/share/image-docs/UTILITIES.md .devcontainer/UTILITIES.md 2>/dev/null || true" \
+}]'
+
 # Set working directory
 WORKDIR /workspace
 
