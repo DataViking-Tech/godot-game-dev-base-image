@@ -1,7 +1,7 @@
 {
 	"name": "Godot Game Dev Image Development",
-	"image": "ghcr.io/dataviking-tech/godot-game-dev:edge", //Primary image
-	//"image": "ghcr.io/dataviking-tech/ai-dev-base:edge",  // Fallback
+	//"image": "ghcr.io/dataviking-tech/godot-game-dev:edge", //Primary image
+	"image": "ghcr.io/dataviking-tech/ai-dev-base:edge",  // Fallback
 	//"build": {"dockerfile": "../Dockerfile"},
 
 	"features": {
