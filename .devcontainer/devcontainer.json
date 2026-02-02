@@ -11,19 +11,7 @@
 		}
 	},
 
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-azuretools.vscode-docker"
-			]
-		}
-	},
-
-	"mounts": [
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-	],
-
-	"postCreateCommand": "echo 'Using godot-game-dev:v2 to develop next version'",
+	"postCreateCommand": "echo 'Using godot-game-dev:edge to develop next version'",
 
 	"remoteUser": "vscode"
 }
