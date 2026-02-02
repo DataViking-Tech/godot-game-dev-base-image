@@ -11,7 +11,5 @@
 		}
 	},
 
-	"postCreateCommand": "echo 'Using godot-game-dev:edge to develop next version'",
-
-	"remoteUser": "vscode"
+	"postCreateCommand": "echo 'Using godot-game-dev:edge to develop next version'"
 }
