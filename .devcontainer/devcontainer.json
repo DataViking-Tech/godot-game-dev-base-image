@@ -11,5 +11,12 @@
 		}
 	},
 
-	"postCreateCommand": "echo 'Using godot-game-dev:edge to develop next version'"
+	"postCreateCommand": "echo 'Using godot-game-dev:edge to develop next version'",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"geequlim.godot-tools"
+			]
+		}
+	}
 }
