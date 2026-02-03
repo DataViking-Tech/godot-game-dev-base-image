@@ -1,0 +1,7 @@
+# Game development Python packages
+pillow
+numpy
+pyyaml
+watchdog
+bpy
+imageio

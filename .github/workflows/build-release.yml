@@ -78,6 +78,10 @@ jobs:
           docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }} \
             /usr/local/bin/validate-tools.sh
 
+      - name: Validate devcontainer metadata
+        if: steps.version.outputs.VERSION != 'manual'
+        run: ./tests/validate-metadata.sh ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
+
       - name: Image summary
         if: steps.version.outputs.VERSION != 'manual'
         run: |

@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(find:*)",
+      "Bash(xargs cat:*)",
+      "Bash(gh api:*)",
+      "Bash(mount:*)",
+      "Bash(echo:*)",
+      "Bash(docker inspect:*)",
+      "Bash(python3:*)",
+      "Bash(docker pull:*)",
+      "WebSearch",
+      "WebFetch(domain:containers.dev)",
+      "WebFetch(domain:github.com)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix CI builds to use Dockerfile and preserve Claude cache\n\nCI workflows used the default devcontainer.json which references a\npre-built image instead of the Dockerfile. This meant Godot and\nvalidate-tools.sh were missing, breaking the test step. Additionally,\ndevcontainers/ci generates its own devcontainer.metadata label,\nreplacing the parent image''s Claude volume mount.\n\nAdd a CI-specific devcontainer.json that builds from the Dockerfile\nand point all three workflows at it via configFile. The parent''s\ndevcontainer.metadata \\(including claude-code-config volume mount\\)\ninherits through the FROM layer and survives the metadata merge.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(gh pr create --title \"Fix CI builds to use Dockerfile and preserve Claude cache\" --body \"$\\(cat <<''EOF''\n## Summary\n\n- **CI was broken**: All three workflows used `devcontainers/ci` with the default devcontainer.json, which references a pre-built image instead of the Dockerfile. Godot and `validate-tools.sh` were missing, so the test step failed.\n- **Claude cache was lost**: `devcontainers/ci` generates its own `devcontainer.metadata` label, replacing the parent image''s Claude volume mount \\(`claude-code-config-*` → `~/.claude`\\).\n- **Fix**: Add a CI-specific `.devcontainer/ci/devcontainer.json` that builds from the Dockerfile, and point all three workflows at it via `configFile`. The parent''s metadata \\(mounts, containerEnv, remoteUser\\) inherits through the `FROM` layer and survives the merge.\n\n## Test plan\n\n- [ ] Push to branch, confirm `build-pr.yml` triggers and passes \\(builds from Dockerfile, `validate-tools.sh` found\\)\n- [ ] Inspect built image''s `devcontainer.metadata` label — should contain parent''s mounts \\(including `claude-code-config-*` volume\\) plus child''s godot-tools extension\n- [ ] Verify local dev workflow unchanged \\(`.devcontainer/devcontainer.json` still works with docker-in-docker feature\\)\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\nEOF\n\\)\")"
+    ]
+  }
+}

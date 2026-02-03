@@ -53,6 +53,9 @@ jobs:
           docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:edge \
             /usr/local/bin/validate-tools.sh
 
+      - name: Validate devcontainer metadata
+        run: ./tests/validate-metadata.sh ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:edge
+
       - name: Image summary
         run: |
           echo "### 🌙 Edge Image Published!" >> $GITHUB_STEP_SUMMARY
