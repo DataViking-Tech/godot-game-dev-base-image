@@ -66,6 +66,7 @@ jobs:
       - name: Build and push dev container image
         uses: devcontainers/ci@v0.3
         with:
+          configFile: .devcontainer/ci/devcontainer.json
           imageName: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           imageTag: ${{ steps.version.outputs.VERSION }},${{ steps.version.outputs.MINOR }},${{ steps.version.outputs.MAJOR }}
           push: always
