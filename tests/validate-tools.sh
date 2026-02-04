@@ -96,6 +96,11 @@ test_file "render_watcher.ps1" "/opt/render-bridges/scripts/windows/render_watch
 test_file "godot_render_watcher.ps1" "/opt/render-bridges/scripts/windows/godot_render_watcher.ps1"
 
 echo ""
+echo "🚀 Startup Scripts:"
+test_file "godot-lsp-start" "/usr/local/bin/godot-lsp-start"
+test_command "godot-lsp-start is executable" "test -x /usr/local/bin/godot-lsp-start && echo ok" "ok"
+
+echo ""
 echo "🔍 Environment:"
 test_command "PATH includes local bin" "echo \$PATH" "local/bin"
 test_command "Shell is bash" "echo \$SHELL" "bash"

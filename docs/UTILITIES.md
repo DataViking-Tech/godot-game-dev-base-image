@@ -50,6 +50,27 @@ All modules are on `PYTHONPATH` automatically (`/opt/render-bridges`).
 - Godot queue: `/workspace/temp/godot-render-queue` (created on demand)
 - Godot output: `/workspace/temp/godot-render-output` (created on demand)
 
+## Godot LSP Auto-Start
+
+The image includes an automatic LSP server startup script that runs via `postStartCommand`.
+When a container starts, it detects the Godot project and launches the LSP server in the
+background for IDE code completion and diagnostics.
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `GODOT_PROJECT_PATH` | *(auto-detect)* | Explicit path to directory containing `project.godot` |
+| `GODOT_LSP_PORT` | `6005` | LSP server port |
+| `GODOT_LSP_DISABLED` | `0` | Set to `1` to skip auto-start |
+
+**Auto-detection order:**
+1. `GODOT_PROJECT_PATH` env var (if set)
+2. `project.godot` in workspace root
+3. Recursive search (max depth 3) from workspace root
+
+**Manual usage:** `/usr/local/bin/godot-lsp-start`
+
+**Logs:** `/tmp/godot-lsp.log`
+
 ## Additional System Libraries
 
 Godot runtime dependencies pre-installed:

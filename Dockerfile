@@ -66,6 +66,10 @@ RUN if [ ! -L /usr/local/bin/node ]; then \
 COPY docs/UTILITIES.md /tmp/godot-utilities.md
 RUN cat /tmp/godot-utilities.md >> /usr/local/share/image-docs/UTILITIES.md && rm /tmp/godot-utilities.md
 
+# Install Godot LSP auto-start script
+COPY scripts/godot-lsp-start /usr/local/bin/godot-lsp-start
+RUN chmod +x /usr/local/bin/godot-lsp-start
+
 # Copy and run validation script to catch tool access issues at build time
 COPY tests/validate-tools.sh /usr/local/bin/validate-tools.sh
 RUN chmod +x /usr/local/bin/validate-tools.sh
