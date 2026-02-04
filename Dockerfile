@@ -5,7 +5,6 @@ FROM ghcr.io/dataviking-tech/ai-dev-base:edge
 
 # Build arguments for component versions
 ARG GODOT_VERSION=4.5.1
-ARG RENDER_BRIDGES_VERSION=main
 
 # Metadata
 LABEL org.opencontainers.image.source=https://github.com/DataViking-Tech/godot-game-dev-base-image
@@ -48,9 +47,11 @@ COPY .devcontainer/requirements.txt /tmp/requirements.txt
 RUN uv pip install --system --break-system-packages --python 3.11 -r /tmp/requirements.txt && rm /tmp/requirements.txt
 
 # Install render-bridges (GPU rendering bridge for Linux→Windows host)
-RUN git clone --depth 1 --branch "${RENDER_BRIDGES_VERSION}" \
-        https://github.com/DataViking-Tech/render-bridges.git /opt/render-bridges \
-    && mkdir -p /workspace/temp/render-queue /workspace/temp/render-output \
+COPY lib/render-bridges/render_bridge /opt/render-bridges/render_bridge
+COPY lib/render-bridges/godot_render_bridge.py /opt/render-bridges/godot_render_bridge.py
+COPY lib/render-bridges/render_bridge_integration.py /opt/render-bridges/render_bridge_integration.py
+COPY lib/render-bridges/scripts /opt/render-bridges/scripts
+RUN mkdir -p /workspace/temp/render-queue /workspace/temp/render-output \
     && chmod 777 /workspace/temp/render-queue /workspace/temp/render-output
 
 # Make render-bridges importable as a Python module
