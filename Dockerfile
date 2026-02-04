@@ -48,7 +48,6 @@ RUN uv pip install --system --break-system-packages --python 3.11 -r /tmp/requir
 
 # Install render-bridges (GPU rendering bridge for Linux→Windows host)
 COPY lib/render-bridges/render_bridge /opt/render-bridges/render_bridge
-COPY lib/render-bridges/godot_render_bridge.py /opt/render-bridges/godot_render_bridge.py
 COPY lib/render-bridges/render_bridge_integration.py /opt/render-bridges/render_bridge_integration.py
 COPY lib/render-bridges/scripts /opt/render-bridges/scripts
 RUN mkdir -p /workspace/temp/render-queue /workspace/temp/render-output \

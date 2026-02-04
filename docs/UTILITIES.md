@@ -31,7 +31,6 @@ Source embedded from `lib/render-bridges/` at build time.
 | Module | Description |
 |--------|-------------|
 | `render_bridge` | Core package: `RenderBridge`, `RenderJob`, `RenderResult` for Blender GPU rendering |
-| `godot_render_bridge` | `GodotRenderBridge` for Godot SubViewport GPU rendering (biome showcases, single assets, animation capture) |
 | `render_bridge_integration` | High-level helpers: `render_static_preview_gpu()`, `render_animation_frames_gpu()`, `is_bridge_available()` |
 
 All modules are on `PYTHONPATH` automatically (`/opt/render-bridges`).
@@ -41,14 +40,11 @@ All modules are on `PYTHONPATH` automatically (`/opt/render-bridges`).
 | Script | Path | Description |
 |--------|------|-------------|
 | `render_watcher.ps1` | `/opt/render-bridges/scripts/windows/` | Monitors render-queue for Blender jobs, supports parallel processing |
-| `godot_render_watcher.ps1` | `/opt/render-bridges/scripts/windows/` | Monitors godot-render-queue for Godot SubViewport jobs |
 
 ### Queue Directories
 
 - Blender queue: `/workspace/temp/render-queue`
 - Blender output: `/workspace/temp/render-output`
-- Godot queue: `/workspace/temp/godot-render-queue` (created on demand)
-- Godot output: `/workspace/temp/godot-render-output` (created on demand)
 
 ## Godot LSP Auto-Start
 

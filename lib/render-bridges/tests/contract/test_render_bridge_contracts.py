@@ -10,8 +10,6 @@ sys.path.insert(0, str(ROOT))
 
 from render_bridge.job import RenderJob, RenderResult, JobStatus
 import render_bridge.bridge as bridge_module
-import godot_render_bridge as godot_bridge
-
 
 class RenderBridgeContractTests(unittest.TestCase):
     def test_render_job_schema(self):
@@ -96,22 +94,6 @@ class RenderBridgeContractTests(unittest.TestCase):
                 bridge = bridge_module.RenderBridge()
                 self.assertEqual(bridge.queue_dir, base / "temp" / "render-queue")
                 self.assertEqual(bridge.output_dir, base / "temp" / "render-output")
-        finally:
-            if original_env is None:
-                os.environ.pop("RENDER_BRIDGE_BASE", None)
-            else:
-                os.environ["RENDER_BRIDGE_BASE"] = original_env
-
-    def test_godot_bridge_paths_and_override(self):
-        original_env = os.environ.get("RENDER_BRIDGE_BASE")
-        try:
-            with tempfile.TemporaryDirectory() as temp_dir:
-                base = Path(temp_dir)
-                os.environ["RENDER_BRIDGE_BASE"] = str(base)
-
-                bridge = godot_bridge.GodotRenderBridge(timeout=0.1, poll_interval=0.01)
-                self.assertEqual(bridge.queue_dir, base / "temp" / "godot-render-queue")
-                self.assertEqual(bridge.output_dir, base / "temp" / "godot-render-output")
         finally:
             if original_env is None:
                 os.environ.pop("RENDER_BRIDGE_BASE", None)
