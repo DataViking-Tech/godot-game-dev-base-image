@@ -2,3 +2,9 @@
 .devcontainer/UTILITIES.md
 temp/
 __pycache__/
+
+# Gas Town (added by gt)
+.runtime/
+.claude/
+.beads/
+.logs/
