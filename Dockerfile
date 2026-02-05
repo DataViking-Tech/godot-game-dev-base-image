@@ -68,6 +68,9 @@ RUN cat /tmp/godot-utilities.md >> /usr/local/share/image-docs/UTILITIES.md && r
 
 # Install Claude Code agent configs (generalized game-dev agents)
 COPY lib/agent-configs/claude-agents/ /opt/agent-configs/claude-agents/
+COPY lib/agent-configs/github-agents/ /opt/agent-configs/github-agents/
+COPY lib/agent-configs/roo-rules/ /opt/agent-configs/roo-rules/
+COPY lib/agent-configs/copilot-instructions.md /opt/agent-configs/copilot-instructions.md
 COPY lib/agent-configs/install-agents.sh /opt/agent-configs/install-agents.sh
 RUN chmod +x /opt/agent-configs/install-agents.sh
 
