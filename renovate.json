@@ -18,6 +18,10 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/dataviking-tech/ai-dev-base"],
       "schedule": ["before 9am on Monday"]
+    },
+    {
+      "matchDepNames": ["python"],
+      "enabled": false
     }
   ]
 }
