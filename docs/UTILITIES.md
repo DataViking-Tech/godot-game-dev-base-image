@@ -99,6 +99,46 @@ result = bridge.wait_for_result(job_id)
 `PYTHONPATH=/opt/render-bridges` is set automatically, making the module available
 without additional configuration.
 
+## Claude Code Agent Configs (`/opt/agent-configs`)
+
+Pre-built Claude Code agent definitions for game development workflows.
+Source embedded from `lib/agent-configs/` at build time.
+
+### Available Agents
+
+| Agent | Model | Description |
+|-------|-------|-------------|
+| `3d-model-reviewer` | opus | Reviews Blender models, GLB exports, and animation setups for mesh quality, rigging, and visual polish |
+| `technical-director` | sonnet | Architectural guidance, performance optimization, stability analysis for Godot 4 projects |
+| `art-director` | sonnet | Creative review and feedback on visual aspects — characters, environments, UI aesthetics |
+| `creative-director` | sonnet | Game vision, tone, core pillars (combat/story/player freedom), cross-discipline consistency |
+| `gamer-appeal-critic` | sonnet | Honest player-perspective assessment from an experienced RTS/FPS/TD gamer |
+| `general-gamer-reviewer` | sonnet | Broad mainstream gamer perspective on player-facing features and UX |
+| `marketing-director` | sonnet | Consumer-focused evaluation, audience sentiment, campaign strategy |
+| `ui-hud-design-reviewer` | sonnet | HUD design, menu flow, information hierarchy, cognitive load assessment |
+
+### Installation into Downstream Projects
+
+The install script copies agents into your project's `.claude/agents/` directory,
+skipping any that already exist (so downstream projects can override individual agents).
+
+Add to your `devcontainer.json` `postCreateCommand`:
+
+```bash
+/opt/agent-configs/install-agents.sh
+```
+
+Or run manually:
+
+```bash
+/opt/agent-configs/install-agents.sh
+```
+
+### Customization
+
+To override a base-image agent, create your own version at `.claude/agents/<name>.md`
+in your project. The install script will not overwrite existing files.
+
 ## Godot LSP Auto-Start
 
 The image includes an automatic LSP server startup script that runs via `postStartCommand`.

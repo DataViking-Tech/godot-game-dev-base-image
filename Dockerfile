@@ -66,6 +66,11 @@ RUN if [ ! -L /usr/local/bin/node ]; then \
 COPY docs/UTILITIES.md /tmp/godot-utilities.md
 RUN cat /tmp/godot-utilities.md >> /usr/local/share/image-docs/UTILITIES.md && rm /tmp/godot-utilities.md
 
+# Install Claude Code agent configs (generalized game-dev agents)
+COPY lib/agent-configs/claude-agents/ /opt/agent-configs/claude-agents/
+COPY lib/agent-configs/install-agents.sh /opt/agent-configs/install-agents.sh
+RUN chmod +x /opt/agent-configs/install-agents.sh
+
 # Install Godot LSP auto-start script
 COPY scripts/godot-lsp-start /usr/local/bin/godot-lsp-start
 RUN chmod +x /usr/local/bin/godot-lsp-start
