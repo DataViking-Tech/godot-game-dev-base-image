@@ -22,6 +22,10 @@
     {
       "matchDepNames": ["python"],
       "enabled": false
+    },
+    {
+      "matchDepNames": ["numpy"],
+      "enabled": false
     }
   ]
 }
