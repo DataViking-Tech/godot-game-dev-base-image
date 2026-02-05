@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT))
 
 from render_bridge.job import RenderJob, RenderResult, JobStatus
 import render_bridge.bridge as bridge_module
+import godot_render_bridge as godot_bridge
 
 class RenderBridgeContractTests(unittest.TestCase):
     def test_render_job_schema(self):
@@ -99,6 +100,63 @@ class RenderBridgeContractTests(unittest.TestCase):
                 os.environ.pop("RENDER_BRIDGE_BASE", None)
             else:
                 os.environ["RENDER_BRIDGE_BASE"] = original_env
+
+    def test_godot_bridge_paths_and_override(self):
+        original_env = os.environ.get("RENDER_BRIDGE_BASE")
+        try:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                base = Path(temp_dir)
+                os.environ["RENDER_BRIDGE_BASE"] = str(base)
+
+                bridge = godot_bridge.GodotRenderBridge(timeout=0.1, poll_interval=0.01)
+                self.assertEqual(bridge.queue_dir, base / "temp" / "godot-render-queue")
+                self.assertEqual(bridge.output_dir, base / "temp" / "godot-render-output")
+        finally:
+            if original_env is None:
+                os.environ.pop("RENDER_BRIDGE_BASE", None)
+            else:
+                os.environ["RENDER_BRIDGE_BASE"] = original_env
+
+    def test_godot_bridge_accepts_any_biome_string(self):
+        """Verify biome parameter accepts arbitrary strings without validation."""
+        job = godot_bridge.GodotRenderJob.biome_showcase(biome="custom_biome_name")
+        self.assertEqual(job.params["biome"], "custom_biome_name")
+        self.assertEqual(job.job_type, "biome_showcase")
+
+    def test_godot_bridge_accepts_any_render_params(self):
+        """Verify camera/density/terrain/render_mode accept arbitrary strings."""
+        job = godot_bridge.GodotRenderJob.biome_showcase(
+            biome="test",
+            camera="custom_angle",
+            density="custom_density",
+            render_mode="custom_mode",
+        )
+        self.assertEqual(job.params["camera"], "custom_angle")
+        self.assertEqual(job.params["density"], "custom_density")
+        self.assertEqual(job.params["render_mode"], "custom_mode")
+
+        job2 = godot_bridge.GodotRenderJob.single_asset(
+            asset_path="res://test.glb",
+            biome="test",
+            terrain_mode="custom_terrain",
+            render_mode="custom_render",
+        )
+        self.assertEqual(job2.params["terrain_mode"], "custom_terrain")
+        self.assertEqual(job2.params["render_mode"], "custom_render")
+
+    def test_godot_bridge_cleanup_uses_instance_dirs(self):
+        """Verify cleanup_job uses instance queue/output dirs, not module globals."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            base = Path(temp_dir)
+            bridge = godot_bridge.GodotRenderBridge(
+                timeout=0.1, poll_interval=0.01, base_dir=base
+            )
+            # Create a fake job file
+            job_file = bridge.queue_dir / "testjob.json"
+            job_file.write_text("{}")
+            self.assertTrue(job_file.exists())
+            bridge.cleanup_job("testjob")
+            self.assertFalse(job_file.exists())
 
 
 if __name__ == "__main__":
