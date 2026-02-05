@@ -20,7 +20,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install pyyaml watchdog
+        run: pip install -r .devcontainer/requirements.txt
 
       - name: Run render-bridges contract tests
         env:
