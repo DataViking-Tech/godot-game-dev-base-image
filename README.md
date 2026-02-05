@@ -1,6 +1,6 @@
 # Godot Game Development Base Image
 
-Custom devcontainer image with pre-installed game development tools for fast container startup.
+Custom devcontainer image with pre-installed game development tools for fast container startup. Extends `ghcr.io/dataviking-tech/ai-dev-base:edge` which provides core dev tools (Python, Claude, Beads, Gas Town, dev-infra).
 
 ## 🚀 Features
 
@@ -9,6 +9,10 @@ Custom devcontainer image with pre-installed game development tools for fast con
 - **Bun** - Fast JavaScript runtime
 - **Claude CLI** - AI coding assistant
 - **beads** - Issue tracking CLI
+- **Gas Town (gt)** - Multi-agent workspace manager
+- **Render bridges** - GPU rendering bridge (render_bridge, godot_render_bridge)
+- **Agent configs** - Pre-built Claude, Copilot, and Roo agent configurations
+- **dev-infra utilities** - Credential caching, project setup, image-versions
 - **System packages** - ffmpeg, build tools, multimedia libraries
 
 ## 📦 Usage
@@ -18,7 +22,7 @@ Custom devcontainer image with pre-installed game development tools for fast con
 ```json
 {
   "name": "My Game Project",
-  "image": "ghcr.io/dataviking-tech/godot-game-dev-base-image:v1.0.0",
+  "image": "ghcr.io/dataviking-tech/godot-game-dev:edge",
 
   "customizations": {
     "vscode": {
@@ -26,10 +30,6 @@ Custom devcontainer image with pre-installed game development tools for fast con
         "geequlim.godot-tools"
       ]
     }
-  },
-
-  "remoteEnv": {
-    "EXPECTED_IMAGE_VERSION": "v1.0.0"
   },
 
   "postCreateCommand": "bash .devcontainer/postCreateCommand.sh"
@@ -42,16 +42,8 @@ Custom devcontainer image with pre-installed game development tools for fast con
 #!/bin/bash
 set -e
 
-# Validate image version
-ACTUAL_VERSION=$(cat /opt/image-version)
-EXPECTED_VERSION="${EXPECTED_IMAGE_VERSION:-v1.0.0}"
-
-if [ "$ACTUAL_VERSION" != "$EXPECTED_VERSION" ]; then
-  echo "⚠️  WARNING: Image version mismatch"
-fi
-
-# Initialize git submodules
-git submodule update --init --recursive
+# All tools are pre-installed in the Docker image under /opt/
+# This script handles project-specific setup only
 
 # Project-specific setup here
 
@@ -68,9 +60,9 @@ echo "✅ Container ready!"
 
 ## 🔄 Version Management
 
-Check version:
+Check installed tool versions:
 ```bash
-cat /opt/image-version  # v1.0.0
+image-versions  # Shows all installed tool versions
 ```
 
 Update to new version:
@@ -86,8 +78,8 @@ Update to new version:
 ## 🏗️ Building Locally
 
 ```bash
-docker build -t godot-dev:local .devcontainer/
-docker run -it godot-dev:local bash
+docker build -t godot-game-dev:local .
+docker run -it godot-game-dev:local bash
 ```
 
 ---
