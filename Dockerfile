@@ -57,6 +57,12 @@ RUN mkdir -p /workspace/temp/render-queue /workspace/temp/render-output \
 # Make render-bridges importable as a Python module
 ENV PYTHONPATH="/opt/render-bridges:${PYTHONPATH}"
 
+# Install dev-infra utilities (enhanced postCreateCommand and image-versions)
+COPY lib/dev-infra/postCreateCommand-enhanced.sh /opt/dev-infra/postCreateCommand-enhanced.sh
+COPY lib/dev-infra/image-versions.sh /opt/dev-infra/bin/image-versions
+RUN chmod +x /opt/dev-infra/postCreateCommand-enhanced.sh /opt/dev-infra/bin/image-versions
+ENV PATH="/opt/dev-infra/bin:${PATH}"
+
 # Create symlink for bun/node compatibility (if not in base)
 RUN if [ ! -L /usr/local/bin/node ]; then \
         ln -s /usr/local/bin/bun /usr/local/bin/node 2>/dev/null || true; \

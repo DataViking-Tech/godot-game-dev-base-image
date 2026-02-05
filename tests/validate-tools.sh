@@ -96,6 +96,14 @@ test_file "render_watcher.ps1" "/opt/render-bridges/scripts/windows/render_watch
 test_file "godot_render_watcher.ps1" "/opt/render-bridges/scripts/windows/godot_render_watcher.ps1"
 
 echo ""
+echo "🏗️ Dev-Infra Utilities:"
+test_file "postCreateCommand-enhanced.sh" "/opt/dev-infra/postCreateCommand-enhanced.sh"
+test_command "postCreateCommand-enhanced.sh is executable" "test -x /opt/dev-infra/postCreateCommand-enhanced.sh && echo ok" "ok"
+test_file "image-versions" "/opt/dev-infra/bin/image-versions"
+test_command "image-versions is executable" "test -x /opt/dev-infra/bin/image-versions && echo ok" "ok"
+test_command "image-versions on PATH" "which image-versions" "image-versions"
+
+echo ""
 echo "🚀 Startup Scripts:"
 test_file "godot-lsp-start" "/usr/local/bin/godot-lsp-start"
 test_command "godot-lsp-start is executable" "test -x /usr/local/bin/godot-lsp-start && echo ok" "ok"
@@ -103,6 +111,7 @@ test_command "godot-lsp-start is executable" "test -x /usr/local/bin/godot-lsp-s
 echo ""
 echo "🔍 Environment:"
 test_command "PATH includes local bin" "echo \$PATH" "local/bin"
+test_command "PATH includes dev-infra bin" "echo \$PATH" "/opt/dev-infra/bin"
 test_command "Shell is bash" "echo \$SHELL" "bash"
 test_command "PYTHONPATH includes render-bridges" "echo \$PYTHONPATH" "/opt/render-bridges"
 

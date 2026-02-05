@@ -99,6 +99,60 @@ result = bridge.wait_for_result(job_id)
 `PYTHONPATH=/opt/render-bridges` is set automatically, making the module available
 without additional configuration.
 
+## Dev-Infra Utilities (`/opt/dev-infra`)
+
+Enhanced devcontainer setup and diagnostics utilities.
+Source embedded from `lib/dev-infra/` at build time.
+
+### Enhanced postCreateCommand (`/opt/dev-infra/postCreateCommand-enhanced.sh`)
+
+A reference `postCreateCommand` script for downstream projects. Provides:
+
+- ANSI progress indicators and formatted output
+- Toolchain validation (Godot, Python, Bun, Claude CLI, beads)
+- MD5-based Python requirements caching (skips reinstall when unchanged)
+- Automatic dev-infra module integration (directories, venv, git hooks, aliases, worktrees)
+- Fallback local setup when dev-infra modules are unavailable
+- `project_setup.sh` integration for project-specific customization
+
+| Environment Variable | Default | Description |
+|---------------------|---------|-------------|
+| `WORKSPACE_ROOT` | `$PWD` | Project root directory |
+| `PROJECT_NAME` | directory name | Display name in startup banner |
+| `WORKTREES_DIR` | *(unset)* | If set, creates worktrees directory |
+
+**Usage in downstream `postCreateCommand`:**
+
+```bash
+# Option 1: Use directly
+/opt/dev-infra/postCreateCommand-enhanced.sh
+
+# Option 2: Source with overrides
+export PROJECT_NAME="My Game"
+export WORKTREES_DIR="/workspaces/my-game-worktrees"
+source /opt/dev-infra/postCreateCommand-enhanced.sh
+```
+
+### Image Versions (`image-versions`)
+
+Reports devcontainer image versions across all projects in the workspace.
+Available on PATH as `image-versions`.
+
+| Environment Variable | Default | Description |
+|---------------------|---------|-------------|
+| `WORKSPACES_DIR` | `/workspaces` | Directory to scan for projects |
+
+**Usage:**
+
+```bash
+image-versions
+# Or with custom directory:
+WORKSPACES_DIR=/home/user/projects image-versions
+```
+
+**Output:** Table of projects with their configured image version and last-updated date,
+plus a comparison of the current project's configured vs running container version.
+
 ## Claude Code Agent Configs (`/opt/agent-configs`)
 
 Pre-built Claude Code agent definitions for game development workflows.
