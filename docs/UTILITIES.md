@@ -32,6 +32,7 @@ Source embedded from `lib/render-bridges/` at build time.
 |--------|-------------|
 | `render_bridge` | Core package: `RenderBridge`, `RenderJob`, `RenderResult` for Blender GPU rendering |
 | `render_bridge_integration` | High-level helpers: `render_static_preview_gpu()`, `render_animation_frames_gpu()`, `is_bridge_available()` |
+| `godot_render_bridge` | Godot SubViewport GPU rendering: `GodotRenderBridge`, `GodotRenderJob`, `GodotRenderResult` |
 
 All modules are on `PYTHONPATH` automatically (`/opt/render-bridges`).
 
@@ -40,11 +41,63 @@ All modules are on `PYTHONPATH` automatically (`/opt/render-bridges`).
 | Script | Path | Description |
 |--------|------|-------------|
 | `render_watcher.ps1` | `/opt/render-bridges/scripts/windows/` | Monitors render-queue for Blender jobs, supports parallel processing |
+| `godot_render_watcher.ps1` | `/opt/render-bridges/scripts/windows/` | Monitors godot-render-queue for Godot SubViewport jobs |
 
 ### Queue Directories
 
 - Blender queue: `/workspace/temp/render-queue`
 - Blender output: `/workspace/temp/render-output`
+- Godot queue: `/workspace/temp/godot-render-queue`
+- Godot output: `/workspace/temp/godot-render-output`
+
+### Render Bridge Architecture
+
+Three layers, each building on the previous:
+
+| Layer | Module | Purpose |
+|-------|--------|---------|
+| Core | `render_bridge` | Generic Blender IPC — queue-based, works with any `.blend` file |
+| Integration | `render_bridge_integration` | High-level Blender helpers — static previews, animation frames |
+| Godot | `godot_render_bridge` | Godot scene rendering — biome showcases, single assets, animation capture |
+
+The Blender layers (`render_bridge`, `render_bridge_integration`) handle `.blend` file rendering.
+The Godot layer (`godot_render_bridge`) handles Godot SubViewport rendering with its own queue
+and watcher. Both use the same host-delegation pattern: Linux writes a JSON job file, the Windows
+watcher picks it up, renders with GPU access, and writes results back.
+
+### Downstream Usage
+
+All string parameters (`biome`, `camera`, `density`, `terrain_mode`, `render_mode`) accept
+any value — define your game's vocabulary in your own project. Default values are sensible
+starting points, not restrictions.
+
+```python
+from godot_render_bridge import GodotRenderBridge
+
+bridge = GodotRenderBridge()
+
+# Biome showcase with project-specific values
+result = bridge.render_biome_showcase(
+    biome='my_custom_biome',
+    camera='overhead',
+    density='dense'
+)
+
+# Single asset render
+result = bridge.render_single_asset(
+    asset_path='res://assets/blender/props/my_prop.glb',
+    biome='desert',
+    terrain_mode='procedural'
+)
+
+# Async: submit without waiting
+job_id = bridge.submit_biome_showcase(biome='forest', camera='wide')
+# ... do other work ...
+result = bridge.wait_for_result(job_id)
+```
+
+`PYTHONPATH=/opt/render-bridges` is set automatically, making the module available
+without additional configuration.
 
 ## Godot LSP Auto-Start
 
